@@ -18,6 +18,11 @@ type WorkedHour = {
     hours: number;
 };
 
+// Lista de base de datos en memoria
+
+let employees: Employee[] = [];
+let workedHours: WorkedHour[] = [];
+
 
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
