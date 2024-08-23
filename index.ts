@@ -3,7 +3,14 @@ import express from 'express';
 const app = express();
 const port = 3000;
 
-// Añade una ruta básica
+// Tipos
+type Employee = {
+    id: string;
+    cedula: string;
+    fullname: string;
+    pricePerHour: number;
+};
+
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });
