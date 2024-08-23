@@ -1,6 +1,8 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 
 const app = express();
+app.use(express.json());
+
 const port = 3000;
 
 // Tipos
@@ -15,6 +17,7 @@ type WorkedHour = {
     employeId: string;
     hours: number;
 };
+
 
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
