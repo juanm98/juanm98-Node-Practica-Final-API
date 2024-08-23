@@ -11,6 +11,11 @@ type Employee = {
     pricePerHour: number;
 };
 
+type WorkedHour = {
+    employeId: string;
+    hours: number;
+};
+
 app.get('/', (req, res) => {
     res.send('¡Hola, mundo!');
 });
