@@ -24,8 +24,8 @@ let employees: Employee[] = [];
 let workedHours: WorkedHour[] = [];
 
 
-app.get('/', (req, res) => {
-    res.send('¡Hola, mundo!');
+app.get ('/employee', (req: Request, res: Response) =>{
+    res.json(employees)
 });
 
 app.listen(port, () => console.log(`This server is running at port ${port}`));
