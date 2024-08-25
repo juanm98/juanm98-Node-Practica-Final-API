@@ -51,5 +51,13 @@ app.get('/employees/:id', (req: Request, res: Response) => {
     }
 });
 
+// Para agregar las horas trabajadas del empleado
+app.post('/worked-hours', (req: Request, res: Response) => {
+    const { employeId, hours } = req.body;
+    const newHours: WorkedHour = { employeId, hours};
+    workedHours.push(newHours);
+    res.status(201).json(newHours);
+});
+
 
 app.listen(port, () => console.log(`This server is running at port ${port}`));
