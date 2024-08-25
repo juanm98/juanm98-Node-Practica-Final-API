@@ -109,7 +109,6 @@ app.put('/employee/:id', (req: Request, res: Response) => {
     const { fullname, pricePerHour } = req.body;
     
     console.log(`Intentando actualizar empleado con ID: ${employeeId}`);
-    console.log('Datos de actualización:', { fullname, pricePerHour });
 
     const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
 
@@ -130,5 +129,21 @@ app.put('/employee/:id', (req: Request, res: Response) => {
     res.json(employees[employeeIndex]);
 });
 
+// Para borrar el empleado
+app.delete('/employee/:id', (req: Request, res: Response) => {
+    const employeeIndex = employees.findIndex(emp => emp.id === req.params.id);
+
+    if(employeeIndex === -1) {
+    return res.status(404).json({ message: "Empleado no encontrado"});
+    };
+
+    const [deletedEmployee] = employees.splice(employeeIndex, 1)
+    workedHours= workedHours.filter(wh => wh.employeId !== req.params.id)
+
+    res.json({
+        message: "Empleado eliminado", 
+        deletedEmployee
+    });
+});
 
 app.listen(port, () => console.log(`This server is running at port ${port}`));
