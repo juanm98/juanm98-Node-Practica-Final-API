@@ -70,16 +70,12 @@ app.post('/worked-hours', (req: Request, res: Response) => {
 // Para obtener las horas trabajadas por empleado
 app.get('/employee/:id/hours', (req: Request, res: Response) => {
     const employeeId = req.params.id;
-    console.log("Busco horas trabajadas con el id:", employeeId);
-
     const employeeHours = workedHours.filter(wh => wh.employeId === employeeId);
 
-    if (employeeId.length > 0) {
-        console.log("Horas", employeeHours);
+    if (employeeHours.length > 0) {
         res.json(employeeHours)
     } else {
-        console.log("No se encontro horas de empleado")
-        res.status(404).json({ message: "No se encontraron horas registradas"})
+        res.status(404).json({ message: "No se encontraron horas registradas para este empleado" })
     }
 });
 
