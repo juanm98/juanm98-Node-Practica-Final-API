@@ -23,7 +23,6 @@ type WorkedHour = {
 let employees: Employee[] = [];
 let workedHours: WorkedHour[] = [];
 
-
 // Para obtener empleados
 app.get ('/employees', (req: Request, res: Response) => {
     res.json(employees)
@@ -137,8 +136,8 @@ app.delete('/employee/:id', (req: Request, res: Response) => {
     return res.status(404).json({ message: "Empleado no encontrado"});
     };
 
-    const [deletedEmployee] = employees.splice(employeeIndex, 1)
-    workedHours= workedHours.filter(wh => wh.employeId !== req.params.id)
+    const [deletedEmployee] = employees.splice(employeeIndex, 1);
+    workedHours= workedHours.filter(wh => wh.employeId !== req.params.id);
 
     res.json({
         message: "Empleado eliminado", 
