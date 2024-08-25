@@ -54,10 +54,33 @@ app.get('/employees/:id', (req: Request, res: Response) => {
 // Para agregar las horas trabajadas del empleado
 app.post('/worked-hours', (req: Request, res: Response) => {
     const { employeId, hours } = req.body;
-    const newHours: WorkedHour = { employeId, hours};
+    console.log('Recibido request para agregar horas:', { employeId, hours });
+    
+    if (!employeId || !hours) {
+        return res.status(400).json({ message: 'Se requieren employeId y hours' });
+    }
+
+    const newHours: WorkedHour = { employeId, hours };
     workedHours.push(newHours);
+    
+    console.log('Horas agregadas. Total de registros:', workedHours.length);
     res.status(201).json(newHours);
 });
 
+// Para obtener las horas trabajadas por empleado
+app.get('/employee/:id/hours', (req: Request, res: Response) => {
+    const employeeId = req.params.id;
+    console.log("Busco horas trabajadas con el id:", employeeId);
+
+    const employeeHours = workedHours.filter(wh => wh.employeId === employeeId);
+
+    if (employeeId.length > 0) {
+        console.log("Horas", employeeHours);
+        res.json(employeeHours)
+    } else {
+        console.log("No se encontro horas de empleado")
+        res.status(404).json({ message: "No se encontraron horas registradas"})
+    }
+});
 
 app.listen(port, () => console.log(`This server is running at port ${port}`));
