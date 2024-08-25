@@ -23,18 +23,6 @@ type WorkedHour = {
 let employees: Employee[] = [];
 let workedHours: WorkedHour[] = [];
 
-// Para agregar empleado
-app.post('/employees', (req: Request, res: Response) => {
-    const { cedula, fullname, pricePerHour } = req.body;
-    const newEmployee: Employee = {
-        id: uuidv4(),
-        cedula,
-        fullname,
-        pricePerHour
-    };
-    employees.push(newEmployee);
-    res.status(201).json(newEmployee);
-});
 
 // Para obtener empleados
 app.get ('/employees', (req: Request, res: Response) => {
@@ -51,6 +39,53 @@ app.get('/employees/:id', (req: Request, res: Response) => {
     }
 });
 
+// Para obtener las horas trabajadas por empleado
+app.get('/employee/:id/hours', (req: Request, res: Response) => {
+    const employeeId = req.params.id;
+    const employeeHours = workedHours.filter(wh => wh.employeId === employeeId);
+    
+    if (employeeHours.length > 0) {
+        res.json(employeeHours)
+    } else {
+        res.status(404).json({ message: "No se encontraron horas registradas para este empleado" })
+    }
+});
+
+// Para obtener salario
+app.get('/employee/:id/salary', (req: Request, res: Response) => {
+    const employee = employees.find(emp => emp.id === req.params.id);
+    if (!employee) {
+        return res.status(404).json({ message: "Empleado no encontrado" });
+    }
+
+    const totalHours = workedHours
+        .filter(wh => wh.employeId === req.params.id)
+        .reduce((sum, current) => sum + current.hours, 0);
+
+    const salary = totalHours * employee.pricePerHour;
+    
+    res.json({
+        employeeId: employee.id,
+        fullname: employee.fullname,
+        totalHours,
+        pricePerHour: employee.pricePerHour,
+        salary
+    });
+});
+
+// Para agregar empleado
+app.post('/employees', (req: Request, res: Response) => {
+    const { cedula, fullname, pricePerHour } = req.body;
+    const newEmployee: Employee = {
+        id: uuidv4(),
+        cedula,
+        fullname,
+        pricePerHour
+    };
+    employees.push(newEmployee);
+    res.status(201).json(newEmployee);
+});
+
 // Para agregar las horas trabajadas del empleado
 app.post('/worked-hours', (req: Request, res: Response) => {
     const { employeId, hours } = req.body;
@@ -59,7 +94,7 @@ app.post('/worked-hours', (req: Request, res: Response) => {
     if (!employeId || !hours) {
         return res.status(400).json({ message: 'Se requieren employeId y hours' });
     }
-
+    
     const newHours: WorkedHour = { employeId, hours };
     workedHours.push(newHours);
     
@@ -67,17 +102,6 @@ app.post('/worked-hours', (req: Request, res: Response) => {
     res.status(201).json(newHours);
 });
 
-// Para obtener las horas trabajadas por empleado
-app.get('/employee/:id/hours', (req: Request, res: Response) => {
-    const employeeId = req.params.id;
-    const employeeHours = workedHours.filter(wh => wh.employeId === employeeId);
-
-    if (employeeHours.length > 0) {
-        res.json(employeeHours)
-    } else {
-        res.status(404).json({ message: "No se encontraron horas registradas para este empleado" })
-    }
-});
 
 // Para actualizar la información del empleado
 app.put('/employee/:id', (req: Request, res: Response) => {
@@ -105,5 +129,6 @@ app.put('/employee/:id', (req: Request, res: Response) => {
 
     res.json(employees[employeeIndex]);
 });
+
 
 app.listen(port, () => console.log(`This server is running at port ${port}`));
