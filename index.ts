@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid'; // Esta dependencia me permite generar ids 
 
 const app = express();
 app.use(express.json());
-
 const port = 3000;
 
 // Tipos
@@ -38,11 +37,19 @@ app.post('/employees', (req: Request, res: Response) => {
 });
 
 // Para obtener empleados
-app.get ('/employee', (req: Request, res: Response) => {
+app.get ('/employees', (req: Request, res: Response) => {
     res.json(employees)
 });
 
-
+// Para obtener empleado por id
+app.get('/employees/:id', (req: Request, res: Response) => {
+    const employee = employees.find(emp => emp.id === req.params.id);
+    if (employee) {
+        res.json(employee);
+    } else {
+        res.status(404).json({ message: "Empleado no  se encontro" });
+    }
+});
 
 
 app.listen(port, () => console.log(`This server is running at port ${port}`));
