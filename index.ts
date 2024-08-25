@@ -79,4 +79,31 @@ app.get('/employee/:id/hours', (req: Request, res: Response) => {
     }
 });
 
+// Para actualizar la información del empleado
+app.put('/employee/:id', (req: Request, res: Response) => {
+    const employeeId = req.params.id;
+    const { fullname, pricePerHour } = req.body;
+    
+    console.log(`Intentando actualizar empleado con ID: ${employeeId}`);
+    console.log('Datos de actualización:', { fullname, pricePerHour });
+
+    const employeeIndex = employees.findIndex(emp => emp.id === employeeId);
+
+    if (employeeIndex === -1) {
+        console.log(`Empleado con ID ${employeeId} no encontrado`);
+        return res.status(404).json({ message: "Empleado no encontrado" });
+    }
+
+    if (fullname !== undefined) {
+        employees[employeeIndex].fullname = fullname;
+    }
+    if (pricePerHour !== undefined) {
+        employees[employeeIndex].pricePerHour = pricePerHour;
+    }
+
+    console.log('Empleado actualizado:', employees[employeeIndex]);
+
+    res.json(employees[employeeIndex]);
+});
+
 app.listen(port, () => console.log(`This server is running at port ${port}`));
